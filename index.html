@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <title>Love PDF</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <!-- Font Awesome -->
+  <script
+    src="https://kit.fontawesome.com/a076d05399.js"
+    crossorigin="anonymous"
+    defer
+  ></script>
+
+  <style>
+    body {
+      background-color: #ffffff; /* white background */
+      color: #4b2995; /* deep purple text */
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    header {
+      padding: 60px 20px 40px;
+      text-align: center;
+      border-bottom: 3px solid #c4b5fd; /* subtle purple underline */
+      position: relative;
+      overflow: visible;
+    }
+
+    /* New logo styles */
+    .logo {
+      background-color: #7c3aed; /* Purple background */
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px; /* Center horizontally with margin below */
+      box-shadow: 0 6px 12px rgb(124 58 237 / 0.5);
+    }
+
+    .logo svg {
+      display: block;
+      width: 32px;
+      height: 32px;
+      fill: white;
+    }
+
+    /* Header icons container */
+    .header-icons {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      margin-bottom: 20px;
+    }
+
+    /* Animate all header icons with subtle bounce */
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-8px);
+      }
+    }
+
+    .header-icons i {
+      font-size: 50px;
+      color: #a78bfa; /* light purple */
+      animation: bounce 3s ease-in-out infinite;
+      filter: drop-shadow(0 0 2px #8b5cf6);
+    }
+    .header-icons i:nth-child(2) {
+      animation-delay: 0.3s;
+    }
+    .header-icons i:nth-child(3) {
+      animation-delay: 0.6s;
+    }
+    .header-icons i:nth-child(4) {
+      animation-delay: 0.9s;
+    }
+    .header-icons i:nth-child(5) {
+      animation-delay: 1.2s;
+    }
+
+    header h1 {
+      font-weight: 800;
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+
+    header p.lead {
+      font-size: 1.3rem;
+      opacity: 0.7;
+      font-weight: 500;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    main.container {
+      flex-grow: 1;
+      max-width: 650px;
+      margin: 40px auto 60px;
+      padding: 0 20px;
+    }
+
+    .card {
+      background-color: #d8b4fe; /* light purple */
+      padding: 35px;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgb(167 139 250 / 0.3);
+      border: none;
+    }
+
+    label.form-label {
+      font-weight: 700;
+      color: #4b2995;
+      margin-bottom: 15px;
+      display: block;
+      font-size: 1.15rem;
+    }
+
+    /* Drag & Drop styles */
+    #drop-zone {
+      border: 2px dashed #a78bfa;
+      background-color: #ede9fe; /* very light purple */
+      color: #4b2995;
+      padding: 50px;
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+      user-select: none;
+      font-weight: 600;
+      font-size: 1.15rem;
+      box-shadow: 0 6px 12px rgb(167 139 250 / 0.25);
+      margin-bottom: 20px;
+    }
+
+    #drop-zone.dragover {
+      background-color: #c4b5fd;
+      border-color: #7c3aed;
+      color: #5b21b6;
+      box-shadow: 0 8px 16px rgb(124 58 237 / 0.5);
+    }
+
+    #file-input {
+      display: none;
+    }
+
+    #file-label {
+      display: inline-block;
+      padding: 12px 28px;
+      background-color: #7c3aed;
+      color: #ede9fe;
+      font-weight: 700;
+      border-radius: 12px;
+      cursor: pointer;
+      user-select: none;
+      box-shadow: 0 6px 12px rgb(124 58 237 / 0.5);
+      transition: background-color 0.3s ease;
+      font-size: 1.1rem;
+    }
+    #file-label:hover {
+      background-color: #5b21b6;
+      box-shadow: 0 8px 16px rgb(91 33 182 / 0.8);
+    }
+
+    button.btn-primary {
+      background-color: #7c3aed;
+      border: none;
+      color: #ede9fe;
+      font-weight: 800;
+      font-size: 1.25rem;
+      padding: 14px 0;
+      border-radius: 12px;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 8px 18px rgb(124 58 237 / 0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      margin-top: 15px;
+    }
+
+    button.btn-primary:hover {
+      background-color: #5b21b6;
+      box-shadow: 0 10px 22px rgb(91 33 182 / 0.9);
+    }
+
+    .spinner-border {
+      display: none;
+      width: 1.8rem;
+      height: 1.8rem;
+      vertical-align: middle;
+      color: #ede9fe !important;
+    }
+
+    footer {
+      background-color: #ede9fe;
+      color: #4b2995;
+      text-align: center;
+      padding: 20px 10px;
+      font-size: 0.95rem;
+      margin-top: auto;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+      font-weight: 600;
+      box-shadow: inset 0 1px 5px rgb(124 58 237 / 0.3);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo" aria-label="Logo: white heart on purple background" role="img">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 
+                 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09 
+                 C13.09 3.81 14.76 3 16.5 3 
+                 19.58 3 22 5.42 22 8.5 
+                 c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      </svg>
+    </div>
+
+    <div class="header-icons" aria-hidden="true" title="Icons representing conversion">
+      <i class="fa-solid fa-file-pdf"></i>
+      <i class="fa-solid fa-file-image"></i>
+      <i class="fa-solid fa-file-arrow-up"></i>
+      <i class="fa-solid fa-file-circle-check"></i>
+      <i class="fa-solid fa-arrow-right-arrow-left"></i>
+    </div>
+
+    <h1>Love PDF</h1>
+    <p class="lead">Convert JPG/PNG images into a clean, single PDF with ease and speed.</p>
+  </header>
+
+  <main class="container">
+    <div class="card shadow-sm" role="form">
+      <form id="upload-form" method="POST" enctype="multipart/form-data" aria-label="Image to PDF upload form">
+        <div
+          id="drop-zone"
+          tabindex="0"
+          role="button"
+          aria-label="File Upload Drop Zone"
+        >
+          Drag & drop your images here, or click to select files
+        </div>
+        <input
+          type="file"
+          id="file-input"
+          name="images"
+          accept=".jpg,.jpeg,.png"
+          multiple
+          required
+          aria-describedby="drop-zone"
+        />
+        <label for="file-input" id="file-label" tabindex="0">Select Files</label>
+
+        <button type="submit" class="btn btn-primary" id="submit-btn" aria-live="polite">
+          Convert to PDF
+          <span
+            class="spinner-border spinner-border-sm"
+            role="status"
+            aria-hidden="true"
+            id="loading-spinner"
+          ></span>
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <small>© 2025 LovePDF. Built with ❤️</small>
+  </footer>
+
+  <script>
+    const dropZone = document.getElementById("drop-zone");
+    const fileInput = document.getElementById("file-input");
+    const uploadForm = document.getElementById("upload-form");
+    const submitBtn = document.getElementById("submit-btn");
+    const spinner = document.getElementById("loading-spinner");
+
+    // Click on drop zone triggers file input click
+    dropZone.addEventListener("click", () => fileInput.click());
+    dropZone.addEventListener("keydown", e => {
+      if(e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        fileInput.click();
+      }
+    });
+
+    // Highlight on dragover
+    dropZone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropZone.classList.add("dragover");
+    });
+
+    // Remove highlight on dragleave or dragend
+    dropZone.addEventListener("dragleave", () => {
+      dropZone.classList.remove("dragover");
+    });
+    dropZone.addEventListener("dragend", () => {
+      dropZone.classList.remove("dragover");
+    });
+
+    // Handle drop
+    dropZone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropZone.classList.remove("dragover");
+
+      const dt = e.dataTransfer;
+      if (dt.files && dt.files.length) {
+        // Create a DataTransfer to update file input files
+        const dataTransfer = new DataTransfer();
+
+        // Add dropped files
+        for (const file of dt.files) {
+          dataTransfer.items.add(file);
+        }
+
+        // Add previously selected files
+        for (const file of fileInput.files) {
+          dataTransfer.items.add(file);
+        }
+
+        fileInput.files = dataTransfer.files;
+      }
+    });
+
+    // Show spinner on form submit
+    uploadForm.addEventListener("submit", (e) => {
+      if (fileInput.files.length === 0) {
+        alert("Please select at least one image.");
+        e.preventDefault();
+        return;
+      }
+      submitBtn.disabled = true;
+      spinner.style.display = "inline-block";
+    });
+  </script>
+</body>
+</html>
